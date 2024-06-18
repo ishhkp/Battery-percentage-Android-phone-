@@ -13,47 +13,44 @@
             text-align: center;
             background-color: #f0f0f0;
         }
-        #batteryButton {
-            width: 60%;
-            height: auto; /* Allow height to be adjusted by padding */
-            padding: 10% 0; /* 10% padding on top and bottom */
-            font-size: 4.5em; /* Adjust the font size to be proportionate */
-            background-color: #4CAF50; /* Green background */
-            color: white;
-            border: none;
-            border-radius: 12px; /* Rounded corners */
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-sizing: border-box; /* Include padding in the element's total width and height */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a shadow for depth */
-            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions for background and transform */
-        }
-        #batteryButton:hover {
-            background-color: #45a049; /* Darker green on hover */
-            transform: translateY(-2px); /* Slight lift on hover */
-        }
-        #batteryButton:active {
-            background-color: #3e8e41; /* Even darker green on click */
-            transform: translateY(1px); /* Slight press down on click */
-        }
         #batteryLevel {
             margin-top: 20px;
             line-height: 1.2; /* Reset line-height to normal */
             display: none; /* Hide initially */
             font-family: Arial, sans-serif; /* Change font to a professional sans-serif */
         }
+        #batteryText {
+            font-family: Arial, sans-serif; /* Change font to a professional sans-serif */
+            font-style: italic;
+            margin-top: -15px; /* Adjust the margin to move it closer */
+        }
+        footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: calc(1em + 2vw); /* Responsive font size */
+            color: #555;
+        }
+        footer a {
+            text-decoration: none;
+            color: #0000FF; /* Blue color for links */
+        }
     </style>
 </head>
 <body>
-    <button id="batteryButton">Get Battery Percentage</button>
     <p id="batteryLevel"></p>
+    <p id="batteryText">Phone Battery</p>
+
+    <footer>
+        Created by: <a href="https://www.instagram.com/beyondcalculation?igsh=MW1tYXU5djd6dGJsNw==" target="_blank">@beyondcalculation</a>
+    </footer>
 
     <script>
-        document.getElementById('batteryButton').addEventListener('click', async () => {
-            const batteryButton = document.getElementById('batteryButton');
+        window.addEventListener('load', async () => {
             const batteryLevelElement = document.getElementById('batteryLevel');
+            const batteryTextElement = document.getElementById('batteryText');
 
             if ('getBattery' in navigator) {
                 try {
@@ -66,28 +63,33 @@
                     const fontSize = Math.min(fontSizeX, fontSizeY);
                     
                     batteryLevelElement.innerHTML = `<span style="font-size: ${fontSize}px;">${Math.floor(level)}</span><span style="font-size: ${fontSize / 3}px;">%</span>`;
+                    batteryTextElement.style.fontSize = `${fontSize * 0.16}px`;
 
                     if (level < 20) {
                         batteryLevelElement.style.color = 'red';
+                        batteryTextElement.style.color = 'red';
                     } else if (level >= 20 && level < 50) {
                         batteryLevelElement.style.color = 'yellow';
+                        batteryTextElement.style.color = 'yellow';
                     } else if (level >= 50 && level < 60) {
                         batteryLevelElement.style.color = 'orange';
+                        batteryTextElement.style.color = 'orange';
                     } else {
                         batteryLevelElement.style.color = 'green';
+                        batteryTextElement.style.color = 'green';
                     }
 
-                    // Hide the button and display the result
-                    batteryButton.style.display = 'none';
+                    // Display the result
                     batteryLevelElement.style.display = 'block';
+                    batteryTextElement.style.display = 'block';
                 } catch (error) {
                     batteryLevelElement.innerText = `Error: ${error.message}`;
-                    batteryButton.style.display = 'none';
+                    batteryTextElement.innerText = '';
                     batteryLevelElement.style.display = 'block';
                 }
             } else {
                 batteryLevelElement.innerText = 'Battery API not supported on this browser.';
-                batteryButton.style.display = 'none';
+                batteryTextElement.innerText = '';
                 batteryLevelElement.style.display = 'block';
             }
         });
